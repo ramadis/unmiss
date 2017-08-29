@@ -4,7 +4,7 @@
   "description": "Ruby's method missing implementation in JS",
   "main": "dist/method-missing.js",
   "scripts": {
-    "test": "karma start test/config.js"
+    "test": "mocha test/*.js"
   },
   "author": "Ramiro Olivera",
   "license": "ISC",
