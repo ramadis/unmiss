@@ -1,0 +1,11 @@
+{
+  "name": "method-missing-js",
+  "version": "1.0.0",
+  "description": "Ruby's method missing implementation in JS",
+  "main": "dist/method-missing.js",
+  "scripts": {
+    "test": "karma start test/config.js"
+  },
+  "author": "Ramiro Olivera",
+  "license": "ISC"
+}
