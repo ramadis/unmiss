@@ -4,6 +4,7 @@ import { SafeClass } from '../dist/method-missing-js';
 describe('SafeClass', () => {
   class TestClass extends SafeClass {
     constructor() {
+      super();
       this.dummyMember = true;
     }
 
@@ -17,6 +18,7 @@ describe('SafeClass', () => {
   }
 
   // Catch, impossible to tell function from member
+  // Catch, you have to call super() in the constructor, only if you want to add anything else on it.
 
   it('should create an instance', () => {
     const testInstance = new TestClass();
