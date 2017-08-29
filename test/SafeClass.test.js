@@ -2,7 +2,6 @@ import { expect } from 'chai';
 import { SafeClass } from '../dist/method-missing-js';
 
 describe('SafeClass', () => {
-
   class TestClass extends SafeClass {
     constructor() {
       this.dummyMember = true;
@@ -16,6 +15,8 @@ describe('SafeClass', () => {
       return true;
     }
   }
+
+  // Catch, impossible to tell function from member
 
   it('should create an instance', () => {
     const testInstance = new TestClass();

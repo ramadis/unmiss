@@ -1,4 +1,4 @@
-class SafeClass {
+export default class SafeClass {
   constructor() {
     const handler = {
       get: this._handleMethodMissing,
@@ -8,21 +8,16 @@ class SafeClass {
   
   _handleMethodMissing(target, name) {
     const origMethod = target[name];
-    if (origMethod) {
-      return typeof origMethod !== 'Function' ?
-             target[name] :
-             function (...args) { origMethod(...args) };
-    }
     
-    return function(...args) { this.methodMissing(name, ...args) }
-  };
-  
-  method() {
-    console.log('method');
+    // If the method not exists, call methodMissing.
+    if (!origMethod) return function(...args) { this.methodMissing(name, ...args) };
+
+    // If it exist, return original member or function.
+    const isFunction = typeof origMethod !== 'Function';
+    return  isFunction ? target[name] : function (...args) { origMethod(...args) };
   }
-    
+
   methodMissing(name, ...args) {
-    console.log('Nombre', name);
-    console.log('args', args);
+    console.log(`Method "${name}" does not exist. Please override methodMissing method to add functionality.`);
   }
 }
