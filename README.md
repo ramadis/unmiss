@@ -2,7 +2,7 @@
 
 ![Unmiss example](http://i.cubeupload.com/SISDqK.png)
 
-Unmiss is a Ruby's `method_missing` implementation you can use in your javascript classes. Basically, it is a method that is called when no matching method is found. It gives you a way to intercept unanswerable messages and handle them gracefully. Learn more about `method_missing` [here](http://rubylearning.com/satishtalim/ruby_method_missing.html).
+**Unmiss** is a Ruby's `method_missing` implementation you can use in your javascript classes. Basically, it is a method that is called when no matching method is found. It gives you a way to intercept unanswerable messages and handle them gracefully. Learn more about `method_missing` [here](http://rubylearning.com/satishtalim/ruby_method_missing.html).
 
 ## Installation
 
@@ -12,7 +12,7 @@ npm install --save unmiss
 
 ## Usage and Examples
 
-There are two ways to use `unmiss`: With ES6 class inheritance or the right way, using new shiny decorators. Whichever way you prefer, add to your class a `methodMissing` method to generate an awesome safety net method.
+There are two ways to use **Unmiss**: With ES6 class inheritance or the right way, using new shiny decorators. Whichever way you prefer, add to your class a `methodMissing` method to generate an awesome safety net method.
 
 Using a modern javascript decorator (*recommended*):
 ```js
