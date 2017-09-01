@@ -1,15 +1,21 @@
 {
-  "name": "method-missing-js",
+  "name": "unmiss",
   "version": "1.0.0",
-  "description": "Ruby's method missing implementation in JS",
-  "main": "dist/method-missing.js",
+  "description": "🔍 Ruby's method_missing implementation in modern javascript",
+  "main": "dist/unmiss.js",
   "scripts": {
     "test": "mocha test/*.js"
   },
-  "author": "Ramiro Olivera",
-  "license": "ISC",
+  "author": "Ramiro Olivera Fedi",
+  "license": "MIT",
   "devDependencies": {
+    "babel-core": "6.26.0",
+    "babel-loader": "7.1.2",
+    "babel-plugin-transform-decorators-legacy": "1.3.4",
+    "babel-preset-env": "1.6.0",
+    "babel-preset-es2017": "6.24.1",
     "chai": "4.1.1",
-    "mocha": "3.5.0"
+    "mocha": "3.5.0",
+    "webpack": "3.5.5"
   }
 }
