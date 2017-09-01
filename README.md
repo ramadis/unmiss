@@ -48,4 +48,8 @@ instance.what('is', 'this');
 
 ## Contributing
 
-Feel free to submit any issues and PRs you want.
+Feel free to submit any issues and PRs you want. To run the project:
+
+```sh
+npm run build && npm run test
+```
