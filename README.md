@@ -4,6 +4,8 @@
 
 **Unmiss** is a Ruby's `method_missing` implementation you can use in your javascript classes. Basically, it is a method that is called when no matching method is found. It gives you a way to intercept unanswerable messages and handle them gracefully. Learn more about `method_missing` [here](http://rubylearning.com/satishtalim/ruby_method_missing.html).
 
+[![Build Status](https://travis-ci.org/ramadis/unmiss.svg?branch=master)](https://travis-ci.org/ramadis/unmiss)
+
 ## Installation
 
 ```bash
