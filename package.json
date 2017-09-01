@@ -4,7 +4,10 @@
   "description": "🔍 Ruby's method_missing implementation in modern javascript",
   "main": "dist/unmiss.js",
   "scripts": {
-    "test": "mocha test/*.js"
+    "postinstall": "node_modules/webpack/bin/webpack.js",
+    "build": "node_modules/webpack/bin/webpack.js",
+    "pretest": "node_modules/webpack/bin/webpack.js",
+    "test": "node_modules/mocha/bin/mocha dist/tests.js"
   },
   "author": "Ramiro Olivera Fedi",
   "license": "MIT",
