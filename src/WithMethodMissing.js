@@ -1,54 +1,23 @@
-@gang('The Warriors', 'Coney Island')
-class Group1 {
-  constructor(){
-  }
-  
-  methodMissing() {
-    return "hola"
-  }
-}
-
-
-@gang('The Riffs', 'Gramercy Park')
-class Group2 {
-  constructor(){
-
-  }
-}
-
-
-@gang('Turnbull ACs', 'Gunhill')
-class Group3 {
-  constructor(){
-
-  }
-}
-
-
-function gang(name, location) {
-
- function _handleMethodMissing (target, name) {
-    const origMethod = target[name];
-    console.log(name)
-    if (name === 'prototype') return target[name];
-    // If the method not exists, call methodMissing.
-    console.log(target)
-    if (!origMethod) return function(...args) { this.methodMissing(name, ...args) };
-
-    // If it exist, return original member or function.
-    const isFunction = typeof origMethod !== 'Function';
-    return  isFunction ? target[name] : function (...args) { origMethod(...args) };
-  }
- return function(target) {
-    console.log('decorated');
-    const handler = {
-      get: _handleMethodMissing,
+export default function withMethodMissing(originalClass) {
+  return class SafeClass extends originalClass {
+    constructor(...args) {
+      super(...args);
+      const handler = {
+        get: this._handleMethodMissing,
+      }
+      return new Proxy(this, handler);
     }
-    
-    return new Proxy(target.prototype.constructor, handler);
+
+    _handleMethodMissing(target, name) {
+      // TODO: Change for target.has(name);
+      const origMethod = target[name];
+
+      // If the method not exists, call methodMissing.
+      if (!origMethod) return function(...args) { this.methodMissing(name, ...args) };
+
+      // If it exist, return original member or function.
+      const isFunction = typeof origMethod !== 'Function';
+      return  isFunction ? target[name] : function (...args) { origMethod(...args) };
+    }
   }
-
 }
-
-const g = new Group1();
-console.log('location=',g.location())

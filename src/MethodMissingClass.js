@@ -1,4 +1,4 @@
-export default class SafeClass {
+export default class MethodMissingClass {
   constructor() {
     const handler = {
       get: this._handleMethodMissing,
