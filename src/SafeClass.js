@@ -7,6 +7,7 @@ export default class SafeClass {
   }
   
   _handleMethodMissing(target, name) {
+    // TODO: Change for target.has(name);
     const origMethod = target[name];
     
     // If the method not exists, call methodMissing.
@@ -21,3 +22,4 @@ export default class SafeClass {
     console.log(`Method "${name}" does not exist. Please override methodMissing method to add functionality.`);
   }
 }
+
