@@ -13,11 +13,11 @@ export default function withMethodMissing(originalClass) {
       const origMethod = target[name];
 
       // If the method not exists, call methodMissing.
-      if (!origMethod) return function(...args) { this.methodMissing(name, ...args) };
+      if (!origMethod) return function(...args) { return this.methodMissing(name, ...args) };
 
       // If it exist, return original member or function.
       const isFunction = typeof origMethod !== 'Function';
-      return  isFunction ? target[name] : function (...args) { origMethod(...args) };
+      return  isFunction ? target[name] : function (...args) { return origMethod(...args) };
     }
   }
 }

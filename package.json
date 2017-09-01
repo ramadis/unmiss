@@ -6,7 +6,6 @@
   "scripts": {
     "postinstall": "node_modules/webpack/bin/webpack.js",
     "build": "node_modules/webpack/bin/webpack.js",
-    "pretest": "node_modules/webpack/bin/webpack.js",
     "test": "node_modules/mocha/bin/mocha dist/tests.js"
   },
   "author": "Ramiro Olivera Fedi",
