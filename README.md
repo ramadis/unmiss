@@ -6,6 +6,9 @@
 
 [![Build Status](https://travis-ci.org/ramadis/unmiss.svg?branch=master)](https://travis-ci.org/ramadis/unmiss)
 
+## Requirements
+**Unmiss** uses ES6 `Proxies` to simulate `method_missing`, so it will only run on node versions greater or equal to 6.4.0. Currently, it does not support browsers.
+
 ## Installation
 
 ```bash
