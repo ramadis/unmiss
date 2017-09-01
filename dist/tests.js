@@ -1032,22 +1032,23 @@ var MethodMissingClass = function () {
   _createClass(MethodMissingClass, [{
     key: '_handleMethodMissing',
     value: function _handleMethodMissing(target, name) {
-      // TODO: Change for target.has(name);
       var origMethod = target[name];
 
+      if (name in target || name === 'methodMissing') {
+        // If it exist, return original member or function.
+        var isFunction = typeof origMethod !== 'Function';
+        return isFunction ? target[name] : function () {
+          return origMethod.apply(undefined, arguments);
+        };
+      }
+
       // If the method not exists, call methodMissing.
-      if (!origMethod) return function () {
+      return function () {
         for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
           args[_key] = arguments[_key];
         }
 
         return this.methodMissing.apply(this, [name].concat(args));
-      };
-
-      // If it exist, return original member or function.
-      var isFunction = typeof origMethod !== 'Function';
-      return isFunction ? target[name] : function () {
-        return origMethod.apply(undefined, arguments);
       };
     }
   }, {
@@ -1109,22 +1110,23 @@ function withMethodMissing(originalClass) {
     _createClass(SafeClass, [{
       key: '_handleMethodMissing',
       value: function _handleMethodMissing(target, name) {
-        // TODO: Change for target.has(name);
         var origMethod = target[name];
 
+        if (name in target || name === 'methodMissing') {
+          // If it exist, return original member or function.
+          var isFunction = typeof origMethod !== 'Function';
+          return isFunction ? target[name] : function () {
+            return origMethod.apply(undefined, arguments);
+          };
+        }
+
         // If the method not exists, call methodMissing.
-        if (!origMethod) return function () {
+        return function () {
           for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
             args[_key2] = arguments[_key2];
           }
 
           return this.methodMissing.apply(this, [name].concat(args));
-        };
-
-        // If it exist, return original member or function.
-        var isFunction = typeof origMethod !== 'Function';
-        return isFunction ? target[name] : function () {
-          return origMethod.apply(undefined, arguments);
         };
       }
     }]);
@@ -1921,6 +1923,7 @@ describe('MethodMissingClass', function () {
       var _this = _possibleConstructorReturn(this, (TestClass.__proto__ || Object.getPrototypeOf(TestClass)).call(this));
 
       _this.dummyMember = true;
+      _this.falseMember = false;
       return _this;
     }
 
@@ -1982,6 +1985,11 @@ describe('MethodMissingClass', function () {
     var testInstance = new TestClass();
     var response = testInstance.inexistentMethod(1, 2, 3, 4);
     (0, _chai.expect)(response.args.length).to.equal(4);
+  });
+
+  it('should return falsey setted members as they are', function () {
+    var testInstance = new TestClass();
+    (0, _chai.expect)(testInstance.falseMember).to.equal(false);
   });
 });
 
@@ -11653,6 +11661,7 @@ describe('withMethodMissing', function () {
       _classCallCheck(this, TestClass);
 
       this.dummyMember = true;
+      this.falseMember = false;
     }
 
     _createClass(TestClass, [{
@@ -11712,6 +11721,11 @@ describe('withMethodMissing', function () {
     var testInstance = new TestClass();
     var response = testInstance.inexistentMethod(1, 2, 3, 4);
     (0, _chai.expect)(response.args.length).to.equal(4);
+  });
+
+  it('should return falsey setted members as they are', function () {
+    var testInstance = new TestClass();
+    (0, _chai.expect)(testInstance.falseMember).to.equal(false);
   });
 });
 

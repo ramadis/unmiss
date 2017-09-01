@@ -6,6 +6,7 @@ describe('withMethodMissing', () => {
   class TestClass {
     constructor() {
       this.dummyMember = true;
+      this.falseMember = false;
     }
 
     methodMissing(name, ...args) {
@@ -55,5 +56,10 @@ describe('withMethodMissing', () => {
     const testInstance = new TestClass();
     const response = testInstance.inexistentMethod(1, 2, 3, 4);
     expect(response.args.length).to.equal(4);
+  });
+
+  it('should return falsey setted members as they are', () => {
+    const testInstance = new TestClass();
+    expect(testInstance.falseMember).to.equal(false);
   });
 });
