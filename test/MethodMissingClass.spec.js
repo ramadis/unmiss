@@ -1,8 +1,9 @@
 import { expect } from 'chai';
-import { SafeClass } from '../dist/method-missing-js';
+import { MethodMissingClass } from '../dist/unmiss';
 
-describe('SafeClass', () => {
-  class TestClass extends SafeClass {
+describe('MethodMissingClass', () => {
+  console.log(MethodMissingClass)
+  class TestClass extends MethodMissingClass {
     constructor() {
       super();
       this.dummyMember = true;

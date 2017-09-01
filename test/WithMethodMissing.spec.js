@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { withMethodMissing } from '../dist/method-missing-js';
+import { withMethodMissing } from '../dist/unmiss';
 
 describe('withMethodMissing', () => {
   @withMethodMissing

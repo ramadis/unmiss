@@ -1,9 +1,27 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/main.js',
+  entry: {
+    unmiss: './src/main.js',
+    tests: './test/main.js'
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'unmiss.js'
+    filename: '[name].js'
   },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['env'],
+            plugins: ['transform-decorators-legacy']
+          }
+        }
+      }
+    ]
+  }
 };
