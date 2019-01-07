@@ -1030,19 +1030,19 @@ var MethodMissingClass = function () {
   }
 
   _createClass(MethodMissingClass, [{
-    key: '_handleMethodMissing',
+    key: "_handleMethodMissing",
     value: function _handleMethodMissing(target, name) {
       var origMethod = target[name];
 
-      if (name in target || name === 'methodMissing') {
+      if (name in target || name === "methodMissing") {
         // If it exist, return original member or function.
-        var isFunction = typeof origMethod !== 'Function';
-        return isFunction ? target[name] : function () {
+        var isFunction = typeof origMethod === "function";
+        return isFunction ? function () {
           return origMethod.apply(undefined, arguments);
-        };
+        } : target[name];
       }
 
-      // If the method not exists, call methodMissing.
+      // If the method doesn't exist, call methodMissing.
       return function () {
         for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
           args[_key] = arguments[_key];
@@ -1052,9 +1052,9 @@ var MethodMissingClass = function () {
       };
     }
   }, {
-    key: 'methodMissing',
+    key: "methodMissing",
     value: function methodMissing(name) {
-      console.log('Method "' + name + '" does not exist. Please override methodMissing method to add functionality.');
+      console.log("Method \"" + name + "\" does not exist. Please override methodMissing method to add functionality.");
     }
   }]);
 
@@ -1108,19 +1108,19 @@ function withMethodMissing(originalClass) {
     }
 
     _createClass(SafeClass, [{
-      key: '_handleMethodMissing',
+      key: "_handleMethodMissing",
       value: function _handleMethodMissing(target, name) {
         var origMethod = target[name];
 
-        if (name in target || name === 'methodMissing') {
+        if (name in target || name === "methodMissing") {
           // If it exist, return original member or function.
-          var isFunction = typeof origMethod !== 'Function';
-          return isFunction ? target[name] : function () {
+          var isFunction = typeof origMethod === "function";
+          return isFunction ? function () {
             return origMethod.apply(undefined, arguments);
-          };
+          } : target[name];
         }
 
-        // If the method not exists, call methodMissing.
+        // If the method doesn't exist, call methodMissing.
         return function () {
           for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
             args[_key2] = arguments[_key2];
@@ -1214,8 +1214,8 @@ function AssertionError (message, _props, ssf) {
   }
 
   // capture stack trace
-  ssf = ssf || arguments.callee;
-  if (ssf && Error.captureStackTrace) {
+  ssf = ssf || AssertionError;
+  if (Error.captureStackTrace) {
     Error.captureStackTrace(this, ssf);
   } else {
     try {
@@ -1268,8 +1268,11 @@ AssertionError.prototype.toJSON = function (stack) {
 /* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
+/* WEBPACK VAR INJECTION */(function(global) {(function (global, factory) {
+	 true ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	(global.typeDetect = factory());
+}(this, (function () { 'use strict';
 
 /* !
  * type-detect
@@ -1277,8 +1280,10 @@ AssertionError.prototype.toJSON = function (stack) {
  * MIT Licensed
  */
 var promiseExists = typeof Promise === 'function';
-var globalObject = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : self; // eslint-disable-line
-var isDom = 'location' in globalObject && 'document' in globalObject;
+
+/* eslint-disable no-undef */
+var globalObject = typeof self === 'object' ? self : global; // eslint-disable-line id-blacklist
+
 var symbolExists = typeof Symbol !== 'undefined';
 var mapExists = typeof Map !== 'undefined';
 var setExists = typeof Set !== 'undefined';
@@ -1307,7 +1312,7 @@ var toStringRightSliceLength = -1;
  * @return {String} object type
  * @api public
  */
-module.exports = function typeDetect(obj) {
+function typeDetect(obj) {
   /* ! Speed optimisation
    * Pre:
    *   string literal     x 3,039,035 ops/sec ±1.62% (78 runs sampled)
@@ -1370,7 +1375,9 @@ module.exports = function typeDetect(obj) {
     return 'Array';
   }
 
-  if (isDom) {
+  // Not caching existence of `window` and related properties due to potential
+  // for `window` to be unset before tests in quasi-browser environments.
+  if (typeof window === 'object' && window !== null) {
     /* ! Spec Conformance
      * (https://html.spec.whatwg.org/multipage/browsers.html#location)
      * WhatWG HTML$7.7.3 - The `Location` interface
@@ -1378,7 +1385,7 @@ module.exports = function typeDetect(obj) {
      *  - IE <=11 === "[object Object]"
      *  - IE Edge <=13 === "[object Object]"
      */
-    if (obj === globalObject.location) {
+    if (typeof window.location === 'object' && obj === window.location) {
       return 'Location';
     }
 
@@ -1401,70 +1408,78 @@ module.exports = function typeDetect(obj) {
      *  - IE 11 === "[object HTMLDocument]"
      *  - IE Edge <=13 === "[object HTMLDocument]"
      */
-    if (obj === globalObject.document) {
+    if (typeof window.document === 'object' && obj === window.document) {
       return 'Document';
     }
 
-    /* ! Spec Conformance
-     * (https://html.spec.whatwg.org/multipage/webappapis.html#mimetypearray)
-     * WhatWG HTML$8.6.1.5 - Plugins - Interface MimeTypeArray
-     * Test: `Object.prototype.toString.call(navigator.mimeTypes)``
-     *  - IE <=10 === "[object MSMimeTypesCollection]"
-     */
-    if (obj === (globalObject.navigator || {}).mimeTypes) {
-      return 'MimeTypeArray';
+    if (typeof window.navigator === 'object') {
+      /* ! Spec Conformance
+       * (https://html.spec.whatwg.org/multipage/webappapis.html#mimetypearray)
+       * WhatWG HTML$8.6.1.5 - Plugins - Interface MimeTypeArray
+       * Test: `Object.prototype.toString.call(navigator.mimeTypes)``
+       *  - IE <=10 === "[object MSMimeTypesCollection]"
+       */
+      if (typeof window.navigator.mimeTypes === 'object' &&
+          obj === window.navigator.mimeTypes) {
+        return 'MimeTypeArray';
+      }
+
+      /* ! Spec Conformance
+       * (https://html.spec.whatwg.org/multipage/webappapis.html#pluginarray)
+       * WhatWG HTML$8.6.1.5 - Plugins - Interface PluginArray
+       * Test: `Object.prototype.toString.call(navigator.plugins)``
+       *  - IE <=10 === "[object MSPluginsCollection]"
+       */
+      if (typeof window.navigator.plugins === 'object' &&
+          obj === window.navigator.plugins) {
+        return 'PluginArray';
+      }
     }
 
-    /* ! Spec Conformance
-     * (https://html.spec.whatwg.org/multipage/webappapis.html#pluginarray)
-     * WhatWG HTML$8.6.1.5 - Plugins - Interface PluginArray
-     * Test: `Object.prototype.toString.call(navigator.plugins)``
-     *  - IE <=10 === "[object MSPluginsCollection]"
-     */
-    if (obj === (globalObject.navigator || {}).plugins) {
-      return 'PluginArray';
-    }
+    if ((typeof window.HTMLElement === 'function' ||
+        typeof window.HTMLElement === 'object') &&
+        obj instanceof window.HTMLElement) {
+      /* ! Spec Conformance
+      * (https://html.spec.whatwg.org/multipage/webappapis.html#pluginarray)
+      * WhatWG HTML$4.4.4 - The `blockquote` element - Interface `HTMLQuoteElement`
+      * Test: `Object.prototype.toString.call(document.createElement('blockquote'))``
+      *  - IE <=10 === "[object HTMLBlockElement]"
+      */
+      if (obj.tagName === 'BLOCKQUOTE') {
+        return 'HTMLQuoteElement';
+      }
 
-    /* ! Spec Conformance
-     * (https://html.spec.whatwg.org/multipage/webappapis.html#pluginarray)
-     * WhatWG HTML$4.4.4 - The `blockquote` element - Interface `HTMLQuoteElement`
-     * Test: `Object.prototype.toString.call(document.createElement('blockquote'))``
-     *  - IE <=10 === "[object HTMLBlockElement]"
-     */
-    if (obj instanceof HTMLElement && obj.tagName === 'BLOCKQUOTE') {
-      return 'HTMLQuoteElement';
-    }
+      /* ! Spec Conformance
+       * (https://html.spec.whatwg.org/#htmltabledatacellelement)
+       * WhatWG HTML$4.9.9 - The `td` element - Interface `HTMLTableDataCellElement`
+       * Note: Most browsers currently adher to the W3C DOM Level 2 spec
+       *       (https://www.w3.org/TR/DOM-Level-2-HTML/html.html#ID-82915075)
+       *       which suggests that browsers should use HTMLTableCellElement for
+       *       both TD and TH elements. WhatWG separates these.
+       * Test: Object.prototype.toString.call(document.createElement('td'))
+       *  - Chrome === "[object HTMLTableCellElement]"
+       *  - Firefox === "[object HTMLTableCellElement]"
+       *  - Safari === "[object HTMLTableCellElement]"
+       */
+      if (obj.tagName === 'TD') {
+        return 'HTMLTableDataCellElement';
+      }
 
-    /* ! Spec Conformance
-     * (https://html.spec.whatwg.org/#htmltabledatacellelement)
-     * WhatWG HTML$4.9.9 - The `td` element - Interface `HTMLTableDataCellElement`
-     * Note: Most browsers currently adher to the W3C DOM Level 2 spec
-     *       (https://www.w3.org/TR/DOM-Level-2-HTML/html.html#ID-82915075)
-     *       which suggests that browsers should use HTMLTableCellElement for
-     *       both TD and TH elements. WhatWG separates these.
-     * Test: Object.prototype.toString.call(document.createElement('td'))
-     *  - Chrome === "[object HTMLTableCellElement]"
-     *  - Firefox === "[object HTMLTableCellElement]"
-     *  - Safari === "[object HTMLTableCellElement]"
-     */
-    if (obj instanceof HTMLElement && obj.tagName === 'TD') {
-      return 'HTMLTableDataCellElement';
-    }
-
-    /* ! Spec Conformance
-     * (https://html.spec.whatwg.org/#htmltableheadercellelement)
-     * WhatWG HTML$4.9.9 - The `td` element - Interface `HTMLTableHeaderCellElement`
-     * Note: Most browsers currently adher to the W3C DOM Level 2 spec
-     *       (https://www.w3.org/TR/DOM-Level-2-HTML/html.html#ID-82915075)
-     *       which suggests that browsers should use HTMLTableCellElement for
-     *       both TD and TH elements. WhatWG separates these.
-     * Test: Object.prototype.toString.call(document.createElement('th'))
-     *  - Chrome === "[object HTMLTableCellElement]"
-     *  - Firefox === "[object HTMLTableCellElement]"
-     *  - Safari === "[object HTMLTableCellElement]"
-     */
-    if (obj instanceof HTMLElement && obj.tagName === 'TH') {
-      return 'HTMLTableHeaderCellElement';
+      /* ! Spec Conformance
+       * (https://html.spec.whatwg.org/#htmltableheadercellelement)
+       * WhatWG HTML$4.9.9 - The `td` element - Interface `HTMLTableHeaderCellElement`
+       * Note: Most browsers currently adher to the W3C DOM Level 2 spec
+       *       (https://www.w3.org/TR/DOM-Level-2-HTML/html.html#ID-82915075)
+       *       which suggests that browsers should use HTMLTableCellElement for
+       *       both TD and TH elements. WhatWG separates these.
+       * Test: Object.prototype.toString.call(document.createElement('th'))
+       *  - Chrome === "[object HTMLTableCellElement]"
+       *  - Firefox === "[object HTMLTableCellElement]"
+       *  - Safari === "[object HTMLTableCellElement]"
+       */
+      if (obj.tagName === 'TH') {
+        return 'HTMLTableHeaderCellElement';
+      }
     }
   }
 
@@ -1636,9 +1651,11 @@ module.exports = function typeDetect(obj) {
     .toString
     .call(obj)
     .slice(toStringLeftSliceLength, toStringRightSliceLength);
-};
+}
 
-module.exports.typeDetect = module.exports;
+return typeDetect;
+
+})));
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(14)))
 
@@ -1913,7 +1930,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-describe('MethodMissingClass', function () {
+describe("MethodMissingClass", function () {
   var TestClass = function (_MethodMissingClass) {
     _inherits(TestClass, _MethodMissingClass);
 
@@ -1928,7 +1945,7 @@ describe('MethodMissingClass', function () {
     }
 
     _createClass(TestClass, [{
-      key: 'methodMissing',
+      key: "methodMissing",
       value: function methodMissing(name) {
         for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
           args[_key - 1] = arguments[_key];
@@ -1937,7 +1954,7 @@ describe('MethodMissingClass', function () {
         return { name: name, args: args };
       }
     }, {
-      key: 'dummyMethod',
+      key: "dummyMethod",
       value: function dummyMethod() {
         return true;
       }
@@ -1949,45 +1966,45 @@ describe('MethodMissingClass', function () {
   // Catch, impossible to tell function from member
   // Catch, you have to call super() in the constructor, only if you want to add anything else on it.
 
-  it('should create an instance', function () {
+  it("should create an instance", function () {
     var testInstance = new TestClass();
     (0, _chai.expect)(testInstance).to.exist;
   });
 
-  it('should access its own methods', function () {
+  it("should access its own methods", function () {
     var testInstance = new TestClass();
     (0, _chai.expect)(testInstance.dummyMethod()).to.equal(true);
   });
 
-  it('should access its own members', function () {
+  it("should access its own members", function () {
     var testInstance = new TestClass();
     (0, _chai.expect)(testInstance.dummyMember).to.equal(true);
   });
 
-  it('should call method missing', function () {
+  it("should call method missing", function () {
     var testInstance = new TestClass();
     (0, _chai.expect)(testInstance.inexistentMethod()).to.exist;
   });
 
-  it('should access the method name from method missing', function () {
+  it("should access the method name from method missing", function () {
     var testInstance = new TestClass();
     var response = testInstance.inexistentMethod();
-    (0, _chai.expect)(response.name).to.equal('inexistentMethod');
+    (0, _chai.expect)(response.name).to.equal("inexistentMethod");
   });
 
-  it('should access the method args from method missing', function () {
+  it("should access the method args from method missing", function () {
     var testInstance = new TestClass();
     var response = testInstance.inexistentMethod(true);
     (0, _chai.expect)(response.args[0]).to.equal(true);
   });
 
-  it('should access get every method args from method missing', function () {
+  it("should get every method args from method missing", function () {
     var testInstance = new TestClass();
     var response = testInstance.inexistentMethod(1, 2, 3, 4);
     (0, _chai.expect)(response.args.length).to.equal(4);
   });
 
-  it('should return falsey setted members as they are', function () {
+  it("should return falsey setted members as they are", function () {
     var testInstance = new TestClass();
     (0, _chai.expect)(testInstance.falseMember).to.equal(false);
   });
@@ -11653,7 +11670,7 @@ var _main = __webpack_require__(4);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-describe('withMethodMissing', function () {
+describe("withMethodMissing", function () {
   var _class;
 
   var TestClass = (0, _main.withMethodMissing)(_class = function () {
@@ -11665,7 +11682,7 @@ describe('withMethodMissing', function () {
     }
 
     _createClass(TestClass, [{
-      key: 'methodMissing',
+      key: "methodMissing",
       value: function methodMissing(name) {
         for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
           args[_key - 1] = arguments[_key];
@@ -11674,7 +11691,7 @@ describe('withMethodMissing', function () {
         return { name: name, args: args };
       }
     }, {
-      key: 'dummyMethod',
+      key: "dummyMethod",
       value: function dummyMethod() {
         return true;
       }
@@ -11685,45 +11702,45 @@ describe('withMethodMissing', function () {
 
   // Catch, impossible to tell function from member
 
-  it('should create an instance', function () {
+  it("should create an instance", function () {
     var testInstance = new TestClass();
     (0, _chai.expect)(testInstance).to.exist;
   });
 
-  it('should access its own methods', function () {
+  it("should access its own methods", function () {
     var testInstance = new TestClass();
     (0, _chai.expect)(testInstance.dummyMethod()).to.equal(true);
   });
 
-  it('should access its own members', function () {
+  it("should access its own members", function () {
     var testInstance = new TestClass();
     (0, _chai.expect)(testInstance.dummyMember).to.equal(true);
   });
 
-  it('should call method missing', function () {
+  it("should call method missing", function () {
     var testInstance = new TestClass();
     (0, _chai.expect)(testInstance.inexistentMethod()).to.exist;
   });
 
-  it('should access the method name from method missing', function () {
+  it("should access the method name from method missing", function () {
     var testInstance = new TestClass();
     var response = testInstance.inexistentMethod();
-    (0, _chai.expect)(response.name).to.equal('inexistentMethod');
+    (0, _chai.expect)(response.name).to.equal("inexistentMethod");
   });
 
-  it('should access the method args from method missing', function () {
+  it("should access the method args from method missing", function () {
     var testInstance = new TestClass();
     var response = testInstance.inexistentMethod(true);
     (0, _chai.expect)(response.args[0]).to.equal(true);
   });
 
-  it('should access get every method args from method missing', function () {
+  it("should get every method args from method missing", function () {
     var testInstance = new TestClass();
     var response = testInstance.inexistentMethod(1, 2, 3, 4);
     (0, _chai.expect)(response.args.length).to.equal(4);
   });
 
-  it('should return falsey setted members as they are', function () {
+  it("should return falsey setted members as they are", function () {
     var testInstance = new TestClass();
     (0, _chai.expect)(testInstance.falseMember).to.equal(false);
   });

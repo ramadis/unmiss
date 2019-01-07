@@ -53,7 +53,13 @@ instance.what('is', 'this');
 
 ## Contributing
 
-Feel free to submit any issues and PRs you want. To run the project:
+Feel free to submit any issues and PRs you want. To run the project first install its dependencies:
+
+```sh
+npm install
+```
+
+Then build it and test it:
 
 ```sh
 npm run build && npm run test

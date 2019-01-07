@@ -119,19 +119,19 @@ function withMethodMissing(originalClass) {
     }
 
     _createClass(SafeClass, [{
-      key: '_handleMethodMissing',
+      key: "_handleMethodMissing",
       value: function _handleMethodMissing(target, name) {
         var origMethod = target[name];
 
-        if (name in target || name === 'methodMissing') {
+        if (name in target || name === "methodMissing") {
           // If it exist, return original member or function.
-          var isFunction = typeof origMethod !== 'Function';
-          return isFunction ? target[name] : function () {
+          var isFunction = typeof origMethod === "function";
+          return isFunction ? function () {
             return origMethod.apply(undefined, arguments);
-          };
+          } : target[name];
         }
 
-        // If the method not exists, call methodMissing.
+        // If the method doesn't exist, call methodMissing.
         return function () {
           for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
             args[_key2] = arguments[_key2];
@@ -199,19 +199,19 @@ var MethodMissingClass = function () {
   }
 
   _createClass(MethodMissingClass, [{
-    key: '_handleMethodMissing',
+    key: "_handleMethodMissing",
     value: function _handleMethodMissing(target, name) {
       var origMethod = target[name];
 
-      if (name in target || name === 'methodMissing') {
+      if (name in target || name === "methodMissing") {
         // If it exist, return original member or function.
-        var isFunction = typeof origMethod !== 'Function';
-        return isFunction ? target[name] : function () {
+        var isFunction = typeof origMethod === "function";
+        return isFunction ? function () {
           return origMethod.apply(undefined, arguments);
-        };
+        } : target[name];
       }
 
-      // If the method not exists, call methodMissing.
+      // If the method doesn't exist, call methodMissing.
       return function () {
         for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
           args[_key] = arguments[_key];
@@ -221,9 +221,9 @@ var MethodMissingClass = function () {
       };
     }
   }, {
-    key: 'methodMissing',
+    key: "methodMissing",
     value: function methodMissing(name) {
-      console.log('Method "' + name + '" does not exist. Please override methodMissing method to add functionality.');
+      console.log("Method \"" + name + "\" does not exist. Please override methodMissing method to add functionality.");
     }
   }]);
 
