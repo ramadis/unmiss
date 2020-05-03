@@ -14,14 +14,14 @@ export default class MethodMissingClass {
       const isFunction = typeof origMethod === "function";
       return isFunction
         ? function(...args) {
-            return origMethod(...args);
+            return origMethod.call(target, ...args);
           }
         : target[name];
     }
 
     // If the method doesn't exist, call methodMissing.
     return function(...args) {
-      return this.methodMissing(name, ...args);
+      return this.methodMissing.call(target, name, ...args);
     };
   }
 
