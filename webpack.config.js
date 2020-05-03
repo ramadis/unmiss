@@ -1,15 +1,17 @@
-const path = require('path');
+const path = require("path");
+const webpack = require("webpack");
 
 module.exports = {
   entry: {
-    unmiss: './src/main.js',
-    tests: './test/main.js'
+    unmiss: "./src/main.js",
+    tests: "./test/main.js"
   },
+  plugins: [new webpack.optimize.UglifyJsPlugin()],
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: '[name].js',
-    library: 'unmiss',
-    libraryTarget: 'umd',
+    path: path.resolve(__dirname, "dist"),
+    filename: "[name].js",
+    library: "unmiss",
+    libraryTarget: "umd",
     umdNamedDefine: true
   },
   module: {
@@ -18,10 +20,10 @@ module.exports = {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: {
-            presets: ['env'],
-            plugins: ['transform-decorators-legacy']
+            presets: ["env"],
+            plugins: ["transform-decorators-legacy"]
           }
         }
       }

@@ -17,9 +17,24 @@ npm install --save unmiss
 
 ## Usage and Examples
 
-There are two ways to use **Unmiss**: With ES6 class inheritance or the right way, using new shiny decorators. Whichever way you prefer, add to your class a `methodMissing` method to generate an awesome safety net method.
+There are two ways to use **Unmiss**: With ES6 class inheritance, by calling a high order function, or using new shiny decorators. Whichever way you prefer, add to your class a `methodMissing` method to generate an awesome safety net method.
 
-Using a modern javascript decorator (*recommended*):
+Using a high order function:
+```js
+import { withMethodMissing } from 'unmiss'
+
+class Example {
+    methodMissing(name, ...args) {
+        console.log(`Method ${name} was called with arguments: ${args.join(' ')}`);
+    }
+}
+
+const instance = new withMethodMissing(Example);
+instance.what('is', 'this');
+> Method what was called with arguments: is this
+```
+
+Using a modern javascript decorator:
 ```js
 import { withMethodMissing } from 'unmiss'
 
