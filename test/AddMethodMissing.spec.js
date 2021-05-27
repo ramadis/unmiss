@@ -60,4 +60,35 @@ describe("addMethodMissing", () => {
   it("should return falsey setted members as they are", () => {
     expect(testInstance.falseMember).to.equal(false);
   });
+
+  describe("nested methodMissing calls", () => {
+    let nestedInstance;
+
+    class NestedClass {
+      constructor(fns) {
+        this.fns = fns;
+      }
+
+      methodMissing(name) {
+        return this.fns[name](this);
+      }
+    }
+
+    it("works", function() {
+      const result = "result";
+
+      const fns = {
+        first: (instance) => instance.second(),
+        second: (instance) => instance.third(),
+        third: () => result,
+      };
+
+      nestedInstance = new NestedClass(fns);
+      nestedInstance = addMethodMissing(nestedInstance);
+
+      expect(nestedInstance.first()).to.equal(result);
+      expect(nestedInstance.second()).to.equal(result);
+      expect(nestedInstance.third()).to.equal(result);
+    });
+  });
 });

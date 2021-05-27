@@ -1,11 +1,11 @@
 export default function addMethodMissing(original) {
   const handler = {
-    get(target, prop, receiver) {
-      if (Reflect.has(target, prop) || prop === "methodMissing") {
-        return Reflect.get(target, prop, receiver);
+    get(target, name, receiver) {
+      if (Reflect.has(target, name) || name === "methodMissing") {
+        return Reflect.get(target, name, receiver);
       }
       return function(...args) {
-        return Reflect.get(target, "methodMissing").call(target, prop, ...args);
+        return Reflect.get(target, "methodMissing").call(receiver, name, ...args);
       };
     },
   };
