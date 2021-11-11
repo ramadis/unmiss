@@ -8,7 +8,7 @@
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/unmiss?color=green)
 ![npm](https://img.shields.io/npm/v/unmiss?color=green)
 ## Requirements
-**Unmiss** uses ES6 `Proxies` to simulate `method_missing`, so it will only run on node versions greater or equal to 6.4.0. Currently, it does not support browsers.
+**Unmiss** uses ES6 `Proxies` to simulate `method_missing`, so it will run on node versions >= v6.4.0. It also supports [most modern browsers](https://caniuse.com/proxy).
 
 ## Installation
 
@@ -18,7 +18,7 @@ npm install --save unmiss
 
 ## Usage and Examples
 
-There are multiple ways to use **Unmiss**: With ES6 class inheritance, by calling a high order function, using new shiny decorators, or wrapping an existing instance. Whichever way you prefer, add to your class a `methodMissing` method to generate an awesome safety net method.
+There are multiple ways to use **Unmiss**: Using class inheritance, by calling a high order function, using [decorators](https://github.com/tc39/proposal-decorators), or wrapping an existing instance. Whichever way you prefer, add to your class a `methodMissing` method to generate an awesome safety net method.
 
 Using a high order function:
 ```js
@@ -65,7 +65,7 @@ const instance = new Example();
 instance.what('is', 'this');
 > Method what was called with arguments: is this
 ```
-***ALERT:** If you choose to use the inheritance way, take into account that if you want to use a `constructor` in your class, you will have to call `super()` first.***
+**ALERT:** If you choose to use the inheritance way, take into account that if you want to use a `constructor` in your class, you will have to call `super()` first.
 
 Wrapping an existing instance of a class:
 ```js
