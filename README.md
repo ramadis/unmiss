@@ -1,11 +1,12 @@
 # Unmiss 🔍
 
-![Unmiss example](http://i.cubeupload.com/SISDqK.png)
+<img width="1088" alt="687474703a2f2f692e6375626575706c6f61642e636f6d2f53495344714b2e706e67" src="https://user-images.githubusercontent.com/2911971/141382997-5f948f7b-456f-42eb-ad0c-16ab9cc050a0.png">
 
 **Unmiss** is a Ruby's `method_missing` implementation you can use in your javascript classes. Basically, it is a method that is called when no matching method is found. It gives you a way to intercept unanswerable messages and handle them gracefully. Learn more about `method_missing` [here](http://rubylearning.com/satishtalim/ruby_method_missing.html).
 
 [![Build Status](https://travis-ci.org/ramadis/unmiss.svg?branch=master)](https://travis-ci.org/ramadis/unmiss)
-![Dependencies Status](https://david-dm.org/ramadis/unmiss.svg)
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/unmiss?color=green)
+![npm](https://img.shields.io/npm/v/unmiss?color=green)
 ## Requirements
 **Unmiss** uses ES6 `Proxies` to simulate `method_missing`, so it will only run on node versions greater or equal to 6.4.0. Currently, it does not support browsers.
 
