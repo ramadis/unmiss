@@ -1,6 +1,6 @@
 {
   "name": "unmiss",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "🔍 Ruby's method_missing implementation in modern javascript",
   "main": "dist/unmiss.js",
   "scripts": {
